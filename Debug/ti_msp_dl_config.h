@@ -84,6 +84,12 @@ extern "C" {
 /* Defines for PIN_14: GPIOA.14 with pinCMx 36 on package pin 29 */
 #define LED1_PIN_14_PIN                                         (DL_GPIO_PIN_14)
 #define LED1_PIN_14_IOMUX                                        (IOMUX_PINCM36)
+/* Port definition for Pin Group KEY */
+#define KEY_PORT                                                         (GPIOA)
+
+/* Defines for PIN_18: GPIOA.18 with pinCMx 40 on package pin 33 */
+#define KEY_PIN_18_PIN                                          (DL_GPIO_PIN_18)
+#define KEY_PIN_18_IOMUX                                         (IOMUX_PINCM40)
 
 
 
