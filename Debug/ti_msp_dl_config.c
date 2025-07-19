@@ -78,6 +78,9 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
 
     DL_GPIO_clearPins(GPIOA, LED1_PIN_14_PIN);
     DL_GPIO_enableOutput(GPIOA, LED1_PIN_14_PIN);
+    DL_GPIO_setUpperPinsPolarity(GPIOA, DL_GPIO_PIN_18_EDGE_RISE);
+    DL_GPIO_clearInterruptStatus(GPIOA, KEY_PIN_18_PIN);
+    DL_GPIO_enableInterrupt(GPIOA, KEY_PIN_18_PIN);
 
 }
 

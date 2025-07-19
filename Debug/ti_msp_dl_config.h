@@ -88,6 +88,10 @@ extern "C" {
 #define KEY_PORT                                                         (GPIOA)
 
 /* Defines for PIN_18: GPIOA.18 with pinCMx 40 on package pin 33 */
+// pins affected by this interrupt request:["PIN_18"]
+#define KEY_INT_IRQN                                            (GPIOA_INT_IRQn)
+#define KEY_INT_IIDX                            (DL_INTERRUPT_GROUP1_IIDX_GPIOA)
+#define KEY_PIN_18_IIDX                                     (DL_GPIO_IIDX_DIO18)
 #define KEY_PIN_18_PIN                                          (DL_GPIO_PIN_18)
 #define KEY_PIN_18_IOMUX                                         (IOMUX_PINCM40)
 
