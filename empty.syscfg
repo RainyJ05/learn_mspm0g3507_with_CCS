@@ -12,7 +12,8 @@
 const Board   = scripting.addModule("/ti/driverlib/Board");
 const GPIO    = scripting.addModule("/ti/driverlib/GPIO", {}, false);
 const GPIO1   = GPIO.addInstance();
-const GPIO2   = GPIO.addInstance();
+const PWM     = scripting.addModule("/ti/driverlib/PWM", {}, false);
+const PWM1    = PWM.addInstance();
 const SYSCTL  = scripting.addModule("/ti/driverlib/SYSCTL");
 const SYSTICK = scripting.addModule("/ti/driverlib/SYSTICK");
 const TIMER   = scripting.addModule("/ti/driverlib/TIMER", {}, false);
@@ -28,21 +29,23 @@ gate7.enable = true;
 
 Board.peripheral.$assign = "DEBUGSS";
 
-GPIO1.$name                              = "LED1";
+GPIO1.$name                              = "KEY";
 GPIO1.port                               = "PORTA";
-GPIO1.associatedPins[0].$name            = "PIN_14";
+GPIO1.associatedPins[0].$name            = "PIN_18";
+GPIO1.associatedPins[0].direction        = "INPUT";
 GPIO1.associatedPins[0].internalResistor = "PULL_DOWN";
-GPIO1.associatedPins[0].assignedPin      = "14";
-GPIO1.associatedPins[0].pin.$assign      = "PA14";
+GPIO1.associatedPins[0].assignedPin      = "18";
+GPIO1.associatedPins[0].interruptEn      = true;
+GPIO1.associatedPins[0].polarity         = "RISE";
 
-GPIO2.$name                              = "KEY";
-GPIO2.port                               = "PORTA";
-GPIO2.associatedPins[0].$name            = "PIN_18";
-GPIO2.associatedPins[0].direction        = "INPUT";
-GPIO2.associatedPins[0].internalResistor = "PULL_DOWN";
-GPIO2.associatedPins[0].assignedPin      = "18";
-GPIO2.associatedPins[0].interruptEn      = true;
-GPIO2.associatedPins[0].polarity         = "RISE";
+PWM1.$name                      = "PWM_LED";
+PWM1.clockDivider               = 8;
+PWM1.timerStartTimer            = true;
+PWM1.ccIndex                    = [0];
+PWM1.peripheral.$assign         = "TIMG12";
+PWM1.peripheral.ccp0Pin.$assign = "PA14";
+PWM1.PWM_CHANNEL_0.$name        = "ti_driverlib_pwm_PWMTimerCC0";
+PWM1.ccp0PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric2";
 
 SYSCTL.forceDefaultClkConfig = true;
 SYSCTL.clockTreeEn           = true;
@@ -81,4 +84,4 @@ ProjectConfig.migrationCondition = true;
  */
 Board.peripheral.swclkPin.$suggestSolution   = "PA20";
 Board.peripheral.swdioPin.$suggestSolution   = "PA19";
-GPIO2.associatedPins[0].pin.$suggestSolution = "PA18";
+GPIO1.associatedPins[0].pin.$suggestSolution = "PA18";

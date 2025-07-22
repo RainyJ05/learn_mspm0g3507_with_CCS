@@ -2,30 +2,23 @@
 
 int main(void)
 {
+    int i = 0;
     SYSCFG_DL_init();
-    //清除定时器中断标志
-    NVIC_ClearPendingIRQ(TIMER_0_INST_INT_IRQN);
-    //使能定时器中断
-    NVIC_EnableIRQ(TIMER_0_INST_INT_IRQN);
-
     while (1)
     {
-
-    }
-}
-
-//定时器的中断服务函数 已配置为1秒的周期
-void TIMER_0_INST_IRQHandler(void)
-{
-    //如果产生了定时器中断
-    switch( DL_TimerG_getPendingInterrupt(TIMER_0_INST) )
-    {
-        case DL_TIMER_IIDX_ZERO://如果是0溢出中断
-            //将LED灯的状态翻转
-            DL_GPIO_togglePins(LED1_PORT, LED1_PIN_14_PIN);
-            break;
-
-        default://其他的定时器中断
-            break;
+        // 呼吸灯渐亮过程
+        for (i = 0; i <= 999; i++)
+        {
+            // 设置 LED 亮度
+            DL_TimerG_setCaptureCompareValue(PWM_LED_INST,i,GPIO_PWM_LED_C0_IDX);
+            delay_cycles(32000);  // 延迟以控制亮度变化速度
+        }
+        // 呼吸灯渐暗过程
+        for (i = 999; i > 0; i--)
+        {
+            // 设置 LED 亮度
+            DL_TimerG_setCaptureCompareValue(PWM_LED_INST,i,GPIO_PWM_LED_C0_IDX);
+            delay_cycles(32000);  // 延迟以控制亮度变化速度
+        }
     }
 }

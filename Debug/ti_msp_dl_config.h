@@ -78,6 +78,20 @@ extern "C" {
 
 
 
+/* Defines for PWM_LED */
+#define PWM_LED_INST                                                      TIMG12
+#define PWM_LED_INST_IRQHandler                                TIMG12_IRQHandler
+#define PWM_LED_INST_INT_IRQN                                  (TIMG12_INT_IRQn)
+#define PWM_LED_INST_CLK_FREQ                                            4000000
+/* GPIO defines for channel 0 */
+#define GPIO_PWM_LED_C0_PORT                                               GPIOA
+#define GPIO_PWM_LED_C0_PIN                                       DL_GPIO_PIN_14
+#define GPIO_PWM_LED_C0_IOMUX                                    (IOMUX_PINCM36)
+#define GPIO_PWM_LED_C0_IOMUX_FUNC                  IOMUX_PINCM36_PF_TIMG12_CCP0
+#define GPIO_PWM_LED_C0_IDX                                  DL_TIMER_CC_0_INDEX
+
+
+
 /* Defines for TIMER_0 */
 #define TIMER_0_INST                                                     (TIMG0)
 #define TIMER_0_INST_IRQHandler                                 TIMG0_IRQHandler
@@ -107,12 +121,6 @@ extern "C" {
 
 
 
-/* Port definition for Pin Group LED1 */
-#define LED1_PORT                                                        (GPIOA)
-
-/* Defines for PIN_14: GPIOA.14 with pinCMx 36 on package pin 29 */
-#define LED1_PIN_14_PIN                                         (DL_GPIO_PIN_14)
-#define LED1_PIN_14_IOMUX                                        (IOMUX_PINCM36)
 /* Port definition for Pin Group KEY */
 #define KEY_PORT                                                         (GPIOA)
 
@@ -132,6 +140,7 @@ void SYSCFG_DL_init(void);
 void SYSCFG_DL_initPower(void);
 void SYSCFG_DL_GPIO_init(void);
 void SYSCFG_DL_SYSCTL_init(void);
+void SYSCFG_DL_PWM_LED_init(void);
 void SYSCFG_DL_TIMER_0_init(void);
 void SYSCFG_DL_UART_0_init(void);
 
