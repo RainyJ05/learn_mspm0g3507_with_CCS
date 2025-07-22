@@ -50,6 +50,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_init(void)
     SYSCFG_DL_GPIO_init();
     /* Module-Specific Initializations*/
     SYSCFG_DL_SYSCTL_init();
+    SYSCFG_DL_TIMER_0_init();
     SYSCFG_DL_UART_0_init();
     SYSCFG_DL_SYSTICK_init();
 }
@@ -60,11 +61,13 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
 {
     DL_GPIO_reset(GPIOA);
     DL_GPIO_reset(GPIOB);
+    DL_TimerG_reset(TIMER_0_INST);
     DL_UART_Main_reset(UART_0_INST);
 
 
     DL_GPIO_enablePower(GPIOA);
     DL_GPIO_enablePower(GPIOB);
+    DL_TimerG_enablePower(TIMER_0_INST);
     DL_UART_Main_enablePower(UART_0_INST);
 
     delay_cycles(POWER_STARTUP_DELAY);
@@ -108,6 +111,45 @@ SYSCONFIG_WEAK void SYSCFG_DL_SYSCTL_init(void)
 	DL_SYSCTL_disableHFXT();
 	DL_SYSCTL_disableSYSPLL();
     DL_SYSCTL_enableMFCLK();
+
+}
+
+
+
+/*
+ * Timer clock configuration to be sourced by BUSCLK /  (4000000 Hz)
+ * timerClkFreq = (timerClkSrc / (timerClkDivRatio * (timerClkPrescale + 1)))
+ *   40000 Hz = 4000000 Hz / (8 * (99 + 1))
+ */
+static const DL_TimerG_ClockConfig gTIMER_0ClockConfig = {
+    .clockSel    = DL_TIMER_CLOCK_BUSCLK,
+    .divideRatio = DL_TIMER_CLOCK_DIVIDE_8,
+    .prescale    = 99U,
+};
+
+/*
+ * Timer load value (where the counter starts from) is calculated as (timerPeriod * timerClockFreq) - 1
+ * TIMER_0_INST_LOAD_VALUE = (1000 ms * 40000 Hz) - 1
+ */
+static const DL_TimerG_TimerConfig gTIMER_0TimerConfig = {
+    .period     = TIMER_0_INST_LOAD_VALUE,
+    .timerMode  = DL_TIMER_TIMER_MODE_PERIODIC,
+    .startTimer = DL_TIMER_START,
+};
+
+SYSCONFIG_WEAK void SYSCFG_DL_TIMER_0_init(void) {
+
+    DL_TimerG_setClockConfig(TIMER_0_INST,
+        (DL_TimerG_ClockConfig *) &gTIMER_0ClockConfig);
+
+    DL_TimerG_initTimerMode(TIMER_0_INST,
+        (DL_TimerG_TimerConfig *) &gTIMER_0TimerConfig);
+    DL_TimerG_enableInterrupt(TIMER_0_INST , DL_TIMERG_INTERRUPT_ZERO_EVENT);
+    DL_TimerG_enableClock(TIMER_0_INST);
+
+
+
+
 
 }
 
